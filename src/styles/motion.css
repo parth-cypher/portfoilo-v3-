@@ -1,0 +1,694 @@
+/* ── Texture: a barely-there film grain over the whole page ─────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── Scroll reveal ──────────────────────────────────────────────────────── */
+/* Only hidden once JS has confirmed motion is allowed (html.motion). */
+.motion [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0);
+  transition:
+    opacity 0.9s var(--ease),
+    transform 1.1s var(--ease);
+  transition-delay: var(--d, 0ms);
+}
+
+.motion [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* Chips inside a revealed row arrive one after another */
+.motion .key__row[data-reveal] .chip--skill {
+  opacity: 0;
+  transform: translate3d(0, 8px, 0);
+  transition:
+    opacity 0.6s var(--ease),
+    transform 0.7s var(--ease),
+    border-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease;
+  transition-delay: calc(var(--d, 0ms) + 180ms + var(--ci, 0) * 35ms);
+}
+
+.motion .key__row.is-revealed .chip--skill {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Parallax ───────────────────────────────────────────────────────────── */
+[data-parallax] {
+  translate: 0 var(--py, 0px);
+  will-change: translate;
+}
+
+/* ── Top progress hairline ──────────────────────────────────────────────── */
+.progress {
+  --p: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  height: 2px;
+  pointer-events: none;
+}
+
+.progress::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--ai), var(--data) 40%, var(--sys) 70%, var(--web));
+  transform: scaleX(var(--p));
+  transform-origin: left;
+  border-radius: 0 2px 2px 0;
+}
+
+/* ── Section index (wide screens) ───────────────────────────────────────── */
+.indicator {
+  position: fixed;
+  left: clamp(16px, 2vw, 32px);
+  top: 50%;
+  z-index: 40;
+  transform: translateY(-50%);
+  display: none;
+}
+
+@media (min-width: 1440px) {
+  .indicator {
+    display: block;
+  }
+}
+
+.indicator ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.indicator a {
+  display: grid;
+  grid-template-columns: 22px 0fr;
+  align-items: center;
+  gap: 0;
+  height: 26px;
+  padding: 0 4px;
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  color: var(--ink-3);
+  text-decoration: none;
+  transition:
+    grid-template-columns 0.5s var(--ease),
+    gap 0.5s var(--ease),
+    color 0.2s ease;
+}
+
+.indicator i {
+  display: none;
+}
+
+.indicator__label {
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.indicator__num {
+  position: relative;
+  padding-left: 0;
+}
+
+.indicator__num::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.indicator a:hover {
+  color: var(--ink);
+}
+
+.indicator li.is-active a {
+  grid-template-columns: 22px 1fr;
+  gap: 6px;
+  color: var(--ink);
+}
+
+.indicator li.is-active .indicator__label {
+  opacity: 1;
+}
+
+.indicator li.is-active .indicator__num::before {
+  opacity: 1;
+}
+
+/* ── Inkflow cursor ─────────────────────────────────────────────────────── */
+/* Seven segments, one shared position. Each trailing segment eases a little
+   longer than the one before, so together they smear like ink. JS writes only
+   --x, --y, --angle and --speed; everything below is CSS. Desktop only. */
+.cur {
+  /* palette: muted violet → muted teal, slate for neutral states */
+  --ink: #8b7bd8;
+  --ink-2: #54a99f;
+  --ink-3: #697386;
+  --cur-fill: #0e1320; /* "VIEW" disc, matches the page's ink */
+  --cur-text: #ffffff;
+
+  --x: -100;
+  --y: -100;
+  --angle: 0deg;
+  --speed: 0;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  pointer-events: none;
+  overflow: visible;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.has-cursor .cur {
+  display: block;
+}
+
+.cur.is-active {
+  opacity: 1;
+}
+
+.has-cursor,
+.has-cursor * {
+  cursor: none !important;
+}
+
+.cur-hint {
+  display: none; /* demo label from the original markup; not needed full-page */
+}
+
+.cur .cursor {
+  --size: calc(15px - var(--i) * 1.5px);
+  --dur: calc(30ms + var(--i) * 38ms);
+  --stretch: calc(1.2 + var(--i) * 0.28);
+  --mix: calc(var(--i) * 15%);
+
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--size);
+  height: var(--size);
+  margin: calc(var(--size) / -2) 0 0 calc(var(--size) / -2);
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--ink) calc(100% - var(--mix)), var(--ink-2));
+  mix-blend-mode: multiply;
+  will-change: transform, opacity;
+  /* Faster movement → a slightly longer, more visible trail; at rest it all but disappears. */
+  opacity: calc((0.08 + var(--speed) * 0.4) * (1 - var(--i) * 0.07));
+  transform: translate3d(calc(var(--x) * 1px), calc(var(--y) * 1px), 0) rotate(var(--angle))
+    scale(calc(1 + var(--speed) * var(--stretch)), calc(1 - var(--speed) * 0.18));
+  transition:
+    transform var(--dur) var(--ease),
+    opacity 0.4s ease,
+    background-color 0.3s ease;
+}
+
+/* the lead segment: small, solid enough to point with, no smear */
+.cur .cursor:first-of-type {
+  --size: 8px;
+  opacity: 0.9;
+  background: var(--ink);
+  mix-blend-mode: normal;
+  will-change: transform;
+  /* grows by size rather than scale, so the larger states stay crisp */
+  transform: translate3d(calc(var(--x) * 1px), calc(var(--y) * 1px), 0);
+  transition:
+    transform var(--dur) var(--ease),
+    width 0.4s var(--ease),
+    height 0.4s var(--ease),
+    margin 0.4s var(--ease),
+    opacity 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.cur.is-snap .cursor {
+  transition: none;
+}
+
+.cur.is-down .cursor:first-of-type {
+  --size: 6px;
+}
+
+/* buttons and links: the lead swells into a soft disc, the trail steps back */
+.cur.is-near .cursor:first-of-type {
+  --size: 22px;
+  opacity: 0.22;
+}
+
+.cur.is-near .cursor:not(:first-of-type) {
+  opacity: calc((0.04 + var(--speed) * 0.2) * (1 - var(--i) * 0.07));
+}
+
+/* navigation: a little larger, in the violet accent */
+.cur.is-nav .cursor:first-of-type {
+  --size: 14px;
+  opacity: 0.8;
+}
+
+/* projects: the lead becomes a small dark disc reading VIEW ↗ */
+.cur.is-view .cursor:first-of-type {
+  --size: 68px;
+  opacity: 1;
+  background: var(--cur-fill);
+  box-shadow: 0 10px 24px -10px rgba(14, 19, 32, 0.5);
+}
+
+.cur.is-view .cursor:not(:first-of-type) {
+  opacity: 0;
+}
+
+.cur-word {
+  position: absolute;
+  z-index: 1; /* it precedes the segments in the markup, so lift it above the disc */
+  left: 0;
+  top: 0;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--cur-text);
+  opacity: 0;
+  transform: translate3d(calc(var(--x) * 1px), calc(var(--y) * 1px), 0) translate(-50%, -50%) scale(0.6);
+  transition:
+    transform 40ms var(--ease),
+    opacity 0.2s ease;
+}
+
+.cur.is-view .cur-word {
+  opacity: 1;
+  transform: translate3d(calc(var(--x) * 1px), calc(var(--y) * 1px), 0) translate(-50%, -50%) scale(1);
+}
+
+/* over the dark cards: lighter inks, screen-blended so they read on charcoal */
+.cur.is-dark {
+  --ink: #b3a8ee;
+  --ink-2: #7fcbc1;
+}
+
+.cur.is-dark .cursor {
+  mix-blend-mode: screen;
+}
+
+.cur.is-dark.is-view .cursor:first-of-type {
+  background: #ffffff;
+}
+
+.cur.is-dark.is-view {
+  --cur-text: #0e1320;
+}
+
+/* ── Tilt cards ─────────────────────────────────────────────────────────── */
+[data-tilt] {
+  transform: perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.6s var(--ease);
+}
+
+/* Revealed tilt cards: the reveal transform hands over to the tilt once settled. */
+.motion [data-tilt][data-reveal].is-revealed {
+  transform: perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition:
+    opacity 0.9s var(--ease) var(--d, 0ms),
+    transform 0.6s var(--ease);
+}
+
+/* ── Portrait ───────────────────────────────────────────────────────────── */
+.portrait {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #1a2030;
+}
+
+.portrait img {
+  width: 100%;
+  height: calc(100% + 24px);
+  margin-top: -12px;
+  object-fit: cover;
+}
+
+.portrait--fallback {
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, 0.09), transparent 60%),
+    linear-gradient(180deg, #232a3b 0%, #111624 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.portrait--fallback::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px) 0 0 / 28px 28px;
+  mask-image: radial-gradient(80% 70% at 50% 40%, #000 30%, transparent 100%);
+}
+
+.portrait__tracks {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.portrait__tracks path {
+  fill: none;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.portrait__tracks circle {
+  fill: #fff;
+  stroke: #111624;
+  stroke-width: 3;
+}
+
+.portrait__mono {
+  position: relative;
+  margin-top: -26%;
+  font-size: clamp(4.5rem, 9vw, 6.5rem);
+  font-weight: 600;
+  letter-spacing: -0.07em;
+  line-height: 1;
+  background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.55) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.portrait__caption {
+  position: absolute;
+  left: 16px;
+  bottom: 14px;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ── Project visual (generated cover) ───────────────────────────────────── */
+.visual {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 16px;
+  color: #e8eaf0;
+  background:
+    radial-gradient(90% 70% at 70% 0%, color-mix(in srgb, var(--line) 26%, transparent), transparent 70%),
+    linear-gradient(180deg, #1d2333 0%, #0f1421 100%);
+  border: 1px solid #0a0e17;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 18px 40px -20px rgba(14, 19, 32, 0.55);
+}
+
+.visual::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(400px circle at var(--gx, 30%) var(--gy, 0%), rgba(255, 255, 255, 0.09), transparent 60%);
+  transition: opacity 0.4s ease;
+}
+
+.visual--shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+/* charts: shown whole on white instead of cropped */
+.visual--contain {
+  background: #fff;
+  border-color: rgba(14, 19, 32, 0.08);
+  box-shadow:
+    inset 0 0 0 1px rgba(14, 19, 32, 0.04),
+    0 18px 40px -24px rgba(14, 19, 32, 0.35);
+}
+
+.visual--contain img {
+  object-fit: contain;
+  object-position: center;
+  padding: 10px;
+}
+
+.visual__grid {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px) 0 0 / 30px 30px,
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px) 0 0 / 30px 30px;
+  mask-image: radial-gradient(90% 80% at 50% 60%, #000 20%, transparent 90%);
+}
+
+.visual__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.visual__track {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.visual__flow {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.55);
+  stroke-width: 2;
+  stroke-dasharray: 2 22;
+  stroke-linecap: round;
+  animation: flow 2.4s linear infinite;
+}
+
+.visual__stop {
+  fill: #fff;
+  stroke: var(--line);
+  stroke-width: 4;
+}
+
+.visual__stop--shipped {
+  fill: var(--line);
+  stroke: #fff;
+  stroke-width: 3;
+}
+
+.is-here .visual__stop {
+  stroke-width: 5;
+}
+
+.visual__halo {
+  fill: color-mix(in srgb, var(--line) 30%, transparent);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: halo 2.6s var(--ease) infinite;
+}
+
+@keyframes halo {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.visual__meta {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  top: 14px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: rgba(232, 234, 240, 0.55);
+}
+
+.visual__title {
+  position: absolute;
+  left: 20px;
+  top: 22%;
+  display: grid;
+  gap: 4px;
+}
+
+.visual__track-name {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--line) 55%, #fff);
+}
+
+.visual__title strong {
+  font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  color: #fff;
+}
+
+/* ── Experience ─────────────────────────────────────────────────────────── */
+.jobs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 20px;
+}
+
+.job {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(24px, 4vw, 56px);
+  padding: clamp(24px, 3vw, 36px);
+  overflow: hidden;
+}
+
+.job::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--line);
+  transform: scaleY(0.25);
+  transform-origin: top;
+  transition: transform 0.7s var(--ease);
+}
+
+.job:hover::before {
+  transform: scaleY(1);
+}
+
+.job__kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  background: var(--gloss);
+  border: 1px solid var(--hair);
+  box-shadow: var(--shadow-xs);
+}
+
+.job__kind i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--line);
+}
+
+.job__kind--current i {
+  background: var(--green);
+  box-shadow: 0 0 0 3px rgba(31, 154, 90, 0.16);
+}
+
+.job__role {
+  margin-top: 16px;
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+.job__org {
+  margin-top: 6px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.job__desc {
+  color: var(--ink-2);
+  max-width: 54ch;
+}
+
+.job__points {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 24px;
+}
+
+.job__points li {
+  position: relative;
+  padding: 10px 0 10px 20px;
+  font-size: 0.9375rem;
+  border-top: 1px solid var(--hair);
+}
+
+.job__points li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 50%;
+  width: 7px;
+  height: 1.5px;
+  background: var(--line);
+  transition: width 0.35s var(--ease);
+}
+
+.job__points li:hover::before {
+  width: 12px;
+}
+
+@media (max-width: 860px) {
+  .job {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .job__points {
+    grid-template-columns: 1fr;
+  }
+}

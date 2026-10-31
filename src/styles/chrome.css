@@ -1,0 +1,334 @@
+/* ── Loader: a fine route draws, then the curtain lifts ─────────────────── */
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(1000px 520px at 50% 0%, #ffffff 0%, rgba(255, 255, 255, 0) 70%),
+    var(--bg);
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 0.8s var(--ease-io);
+}
+
+.loader--lift {
+  clip-path: inset(0 0 100% 0);
+}
+
+.loader__inner {
+  display: grid;
+  justify-items: center;
+  transition:
+    opacity 0.4s ease,
+    transform 0.6s var(--ease);
+}
+
+.loader--lift .loader__inner {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.loader__route {
+  position: relative;
+  width: min(420px, 68vw);
+  height: 48px;
+}
+
+.loader__rail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 11px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: loader-rail 0.9s var(--ease) 0.1s forwards;
+}
+
+.loader__stop {
+  position: absolute;
+  top: 12px;
+  display: block;
+  width: 12px;
+  height: 12px;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.4);
+  animation: loader-stop 0.45s var(--ease) forwards;
+}
+
+.loader__stop i {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--ink);
+}
+
+.loader__stop.is-current i {
+  background: var(--ink);
+}
+
+.loader__stop b {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.loader__name {
+  margin-top: 40px;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  opacity: 0;
+  animation: loader-up 0.7s var(--ease) 0.85s forwards;
+}
+
+@keyframes loader-rail {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes loader-stop {
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes loader-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+/* ── Navigation: floating glass bar ─────────────────────────────────────── */
+.nav {
+  position: fixed;
+  top: 14px;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  padding: 0 clamp(12px, 3vw, 28px);
+  pointer-events: none;
+}
+
+.nav__bar {
+  position: relative;
+  max-width: 1180px;
+  height: 60px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 10px 0 12px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.68);
+  -webkit-backdrop-filter: saturate(1.8) blur(18px);
+  backdrop-filter: saturate(1.8) blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 0 0 1px rgba(14, 19, 32, 0.06),
+    0 12px 32px -14px rgba(14, 19, 32, 0.28);
+  pointer-events: auto;
+  transition:
+    background-color 0.4s ease,
+    box-shadow 0.5s var(--ease),
+    max-width 0.6s var(--ease);
+}
+
+/* once the page moves, the bar firms up and tucks in a little */
+.nav.is-scrolled .nav__bar {
+  max-width: 1120px;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 0 0 1px rgba(14, 19, 32, 0.07),
+    0 18px 40px -16px rgba(14, 19, 32, 0.32);
+}
+
+.brand__mark {
+  transition: transform 0.5s var(--ease);
+}
+
+.brand:hover .brand__mark {
+  transform: rotate(-6deg) scale(1.04);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  text-decoration: none;
+}
+
+.brand__mark {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--dark-gloss);
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 4px 10px -4px rgba(14, 19, 32, 0.55);
+}
+
+.brand__mark--sm {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  font-size: 0.75rem;
+}
+
+.nav__links {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin: 0 auto;
+  padding: 4px;
+  border-radius: 13px;
+  background: rgba(14, 19, 32, 0.045);
+  box-shadow: inset 0 1px 2px rgba(14, 19, 32, 0.07);
+}
+
+.nav__pill {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 0;
+  border-radius: 9px;
+  background: var(--gloss);
+  border: 1px solid rgba(14, 19, 32, 0.06);
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 1px 2px rgba(14, 19, 32, 0.08),
+    0 4px 10px -4px rgba(14, 19, 32, 0.18);
+  opacity: 0;
+  transition:
+    transform 0.55s var(--ease),
+    width 0.55s var(--ease),
+    opacity 0.2s ease;
+}
+
+.nav__hover {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 0;
+  border-radius: 9px;
+  background: rgba(14, 19, 32, 0.05);
+  opacity: 0;
+  transition:
+    transform 0.35s var(--ease),
+    width 0.35s var(--ease),
+    opacity 0.25s ease;
+}
+
+.nav__short {
+  display: none;
+}
+
+.nav__link {
+  position: relative;
+  z-index: 1;
+  padding: 8px 14px;
+  border-radius: 9px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.nav__link:hover,
+.nav__link.is-active {
+  color: var(--ink);
+}
+
+.nav__cta {
+  flex-shrink: 0;
+}
+
+@media (max-width: 960px) {
+  .brand__name {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  :root {
+    --nav-h: 76px;
+  }
+
+  .nav {
+    top: 10px;
+  }
+
+  .nav__bar {
+    height: 54px;
+    gap: 8px;
+    padding: 0 8px;
+    border-radius: 16px;
+  }
+
+  .nav__cta,
+  .nav__link--home {
+    display: none;
+  }
+
+  .nav__links {
+    margin-right: 0;
+  }
+
+  .nav__link {
+    padding: 7px 9px;
+    font-size: 0.8125rem;
+  }
+
+  .nav__full {
+    display: none;
+  }
+
+  .nav__short {
+    display: inline;
+  }
+}
+
+@media (max-width: 400px) {
+  .nav__link {
+    padding: 7px 6px;
+  }
+}
+
+@media (max-width: 350px) {
+  .brand {
+    display: none;
+  }
+}

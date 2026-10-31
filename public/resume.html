@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parth P Patil — Resume</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0e0e;
+    --ink-muted: #5a5a5a;
+    --ink-faint: #9a9a9a;
+    --rule: #d4d0c8;
+    --paper: #f8f6f1;
+    --accent: #1a1a1a;
+    --gold: #8b6914;
+    --tag-bg: #eeeae0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    font-size: 9.5pt;
+    line-height: 1.55;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 13mm 14mm 10mm 14mm;
+    position: relative;
+  }
+
+  /* ─── HEADER ─── */
+  .header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    padding-bottom: 8px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 14px;
+    gap: 16px;
+  }
+
+  .name-block h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 38pt;
+    letter-spacing: -0.5px;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .name-block h1 span {
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .title-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 6px;
+  }
+
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 6.5pt;
+    font-weight: 400;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    background: var(--tag-bg);
+    padding: 2px 7px;
+    border-radius: 2px;
+  }
+
+  .contact-block {
+    text-align: right;
+    font-family: 'DM Mono', monospace;
+    font-size: 7pt;
+    color: var(--ink-muted);
+    line-height: 1.8;
+  }
+
+  .contact-block a {
+    color: var(--ink-muted);
+    text-decoration: none;
+  }
+
+  .contact-block a:hover {
+    color: var(--ink);
+  }
+
+  /* ─── LAYOUT GRID ─── */
+  .body-grid {
+    display: grid;
+    grid-template-columns: 62mm 1fr;
+    gap: 0 14mm;
+  }
+
+  /* ─── SECTION LABELS ─── */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 6.5pt;
+    font-weight: 500;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 0.5px;
+    background: var(--rule);
+  }
+
+  .section {
+    margin-bottom: 16px;
+  }
+
+  /* ─── SUMMARY ─── */
+  .summary-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11.5pt;
+    font-weight: 400;
+    line-height: 1.65;
+    color: var(--ink);
+    font-style: italic;
+  }
+
+  /* ─── SKILLS ─── */
+  .skill-group {
+    margin-bottom: 9px;
+  }
+
+  .skill-group-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 6pt;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+
+  .skill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .skill-pill {
+    font-size: 7.5pt;
+    font-weight: 400;
+    color: var(--ink);
+    background: transparent;
+    border: 0.75px solid var(--rule);
+    padding: 2px 7px;
+    border-radius: 20px;
+    line-height: 1.5;
+  }
+
+  /* ─── EDUCATION ─── */
+  .edu-item {
+    margin-bottom: 9px;
+  }
+
+  .edu-degree {
+    font-weight: 600;
+    font-size: 8.5pt;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+
+  .edu-school {
+    font-size: 8pt;
+    color: var(--ink-muted);
+    line-height: 1.4;
+  }
+
+  .edu-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 6.5pt;
+    color: var(--ink-faint);
+    margin-top: 1px;
+  }
+
+  /* ─── PROJECTS ─── */
+  .project-item {
+    margin-bottom: 13px;
+    padding-bottom: 13px;
+    border-bottom: 0.5px solid var(--rule);
+  }
+
+  .project-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 3px;
+  }
+
+  .project-name {
+    font-weight: 600;
+    font-size: 9.5pt;
+    color: var(--ink);
+    letter-spacing: -0.1px;
+  }
+
+  .project-type {
+    font-family: 'DM Mono', monospace;
+    font-size: 6.5pt;
+    color: var(--ink-faint);
+    letter-spacing: 0.5px;
+  }
+
+  .project-desc {
+    font-size: 8.5pt;
+    color: var(--ink-muted);
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+
+  .project-highlights {
+    list-style: none;
+    margin-bottom: 6px;
+  }
+
+  .project-highlights li {
+    font-size: 8pt;
+    color: var(--ink-muted);
+    line-height: 1.5;
+    padding-left: 10px;
+    position: relative;
+  }
+
+  .project-highlights li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--ink-faint);
+    font-size: 7pt;
+  }
+
+  .project-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+  }
+
+  .stack-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 6.5pt;
+    color: var(--gold);
+    background: #f5f0e4;
+    padding: 1.5px 6px;
+    border-radius: 2px;
+    border: 0.5px solid #e0d5b8;
+  }
+
+  /* ─── INTERESTS / ABOUT ─── */
+  .about-line {
+    font-size: 8.5pt;
+    color: var(--ink-muted);
+    line-height: 1.7;
+  }
+
+  .soft-skills {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .soft-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 8pt;
+    color: var(--ink-muted);
+  }
+
+  .soft-item::before {
+    content: '';
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    border-top: 0.5px solid var(--rule);
+    margin-top: 10px;
+    padding-top: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-note {
+    font-family: 'DM Mono', monospace;
+    font-size: 6pt;
+    color: var(--ink-faint);
+    letter-spacing: 0.5px;
+  }
+
+  /* ─── DECORATIVE ─── */
+  .deco-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 7pt;
+    color: var(--rule);
+    font-style: italic;
+    margin-right: 3px;
+  }
+
+  .availability-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'DM Mono', monospace;
+    font-size: 6.5pt;
+    color: #3a7d44;
+    letter-spacing: 0.5px;
+  }
+
+  .availability-badge::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #3a7d44;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* ─── PRINT ─── */
+  @media print {
+    body { background: var(--paper); }
+    .page { padding: 13mm 14mm 10mm 14mm; }
+    .availability-badge::before { animation: none; }
+  }
+
+  @media screen {
+    body { box-shadow: 0 4px 40px rgba(0,0,0,0.12); }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="name-block">
+      <h1>Parth <span>P</span> Patil</h1>
+      <div class="title-tags">
+        <span class="tag">Software Developer</span>
+        <span class="tag">Frontend Engineer</span>
+        <span class="tag">Full Stack</span>
+        <span class="tag">AI / ML</span>
+      </div>
+    </div>
+    <div class="contact-block">
+      <div><a href="mailto:parthpatil8106@gmail.com">parthpatil8106@gmail.com</a></div>
+      <div><a href="https://github.com/parth-cypher">github.com/parth-cypher</a></div>
+      <div><a href="https://www.linkedin.com/in/parth-patil-32ab08394">linkedin.com/in/parth-patil</a></div>
+      <div><a href="https://x.com/parthppatil8">x.com/parthppatil8</a></div>
+      <div style="margin-top: 4px;"><span class="availability-badge">Open to Software Engineering Internships</span></div>
+    </div>
+  </header>
+
+  <!-- MAIN GRID -->
+  <div class="body-grid">
+
+    <!-- LEFT COLUMN -->
+    <aside>
+
+      <!-- SUMMARY -->
+      <div class="section">
+        <div class="section-label">About</div>
+        <p class="summary-text">
+          A third-year Computer Science Engineering student passionate about building intelligent systems, practical software and digital experiences through AI, machine learning and full-stack development.
+        </p>
+      </div>
+
+      <!-- EDUCATION -->
+      <div class="section">
+        <div class="section-label">Education</div>
+
+        <div class="edu-item">
+          <div class="edu-degree">BTech — Computer Science Engineering</div>
+          <div class="edu-school">Dr. D. Y. Patil School of Science &amp; Technology<br>Tathawade, Pune</div>
+          <div class="edu-meta">3rd Year · Ongoing</div>
+        </div>
+
+        <div class="edu-item">
+          <div class="edu-degree">HSC — Science</div>
+          <div class="edu-school">Ligade Patil Junior College<br>Karad</div>
+          <div class="edu-meta">Completed</div>
+        </div>
+
+        <div class="edu-item">
+          <div class="edu-degree">SSC</div>
+          <div class="edu-school">SPM School Parshuram<br>Chiplun</div>
+          <div class="edu-meta">Completed</div>
+        </div>
+      </div>
+
+      <!-- SKILLS -->
+      <div class="section">
+        <div class="section-label">Technical Skills</div>
+
+        <div class="skill-group">
+          <div class="skill-group-name">Frontend</div>
+          <div class="skill-list">
+            <span class="skill-pill">React.js</span>
+            <span class="skill-pill">JavaScript</span>
+            <span class="skill-pill">HTML / CSS</span>
+            <span class="skill-pill">Framer Motion</span>
+            <span class="skill-pill">Responsive Design</span>
+          </div>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-group-name">Backend &amp; DB</div>
+          <div class="skill-list">
+            <span class="skill-pill">Node.js</span>
+            <span class="skill-pill">Express.js</span>
+            <span class="skill-pill">MongoDB</span>
+          </div>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-group-name">AI / ML</div>
+          <div class="skill-list">
+            <span class="skill-pill">Python</span>
+            <span class="skill-pill">TensorFlow</span>
+            <span class="skill-pill">Transfer Learning</span>
+          </div>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-group-name">Tools</div>
+          <div class="skill-list">
+            <span class="skill-pill">Git &amp; GitHub</span>
+            <span class="skill-pill">Hugging Face</span>
+            <span class="skill-pill">UI/UX Thinking</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SOFT SKILLS -->
+      <div class="section">
+        <div class="section-label">Strengths</div>
+        <div class="soft-skills">
+          <div class="soft-item">Creative Problem Solving</div>
+          <div class="soft-item">Calm Under Complexity</div>
+          <div class="soft-item">Client Communication</div>
+          <div class="soft-item">Self-Directed Learning</div>
+          <div class="soft-item">Design Sensibility</div>
+          <div class="soft-item">Consistent Execution</div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- RIGHT COLUMN -->
+    <main>
+
+      <!-- PROJECTS -->
+      <div class="section">
+        <div class="section-label">Projects</div>
+
+        <!-- Project 1 -->
+        <div class="project-item">
+          <div class="project-header">
+            <div class="project-name"><span class="deco-number">01.</span>iScanAI</div>
+            <div class="project-type">AI · Medical · Personal</div>
+          </div>
+          <div class="project-desc">
+            An AI-powered cataract detection system built with transfer learning. Designed end-to-end from model training to live deployment.
+          </div>
+          <ul class="project-highlights">
+            <li>93.3% detection accuracy on validation dataset</li>
+            <li>Built on MobileNetV2 with custom fine-tuning layers</li>
+            <li>Deployed on Hugging Face with a clean inference interface</li>
+            <li>Hands-on experience with real model debugging &amp; optimization pipelines</li>
+          </ul>
+          <div class="project-stack">
+            <span class="stack-tag">Python</span>
+            <span class="stack-tag">TensorFlow</span>
+            <span class="stack-tag">MobileNetV2</span>
+            <span class="stack-tag">Hugging Face</span>
+          </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="project-item">
+          <div class="project-header">
+            <div class="project-name"><span class="deco-number">02.</span>Habit Tracker</div>
+            <div class="project-type">Full Stack · Productivity</div>
+          </div>
+          <div class="project-desc">
+            A full-stack habit tracking application built to explore real-world product architecture with clean UX and complete auth flow.
+          </div>
+          <ul class="project-highlights">
+            <li>JWT-based authentication with secure session management</li>
+            <li>Full CRUD operations with a user-first workflow</li>
+            <li>Responsive UI built with React — designed for daily usability</li>
+            <li>RESTful API with Node.js &amp; Express backend, MongoDB persistence</li>
+          </ul>
+          <div class="project-stack">
+            <span class="stack-tag">React</span>
+            <span class="stack-tag">Node.js</span>
+            <span class="stack-tag">Express.js</span>
+            <span class="stack-tag">MongoDB</span>
+            <span class="stack-tag">JWT</span>
+          </div>
+        </div>
+
+
+      </div>
+
+      <!-- CURRENTLY BUILDING -->
+      <div class="section">
+        <div class="section-label">Currently</div>
+        <p class="about-line">
+          Deepening full-stack architecture skills · Exploring premium UI systems and interaction design · Seeking a software engineering internship · Learning deployment infrastructure and scalable product thinking.
+        </p>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-note">Parth P Patil · B.Tech CSE, 3rd Year · Pune, India</div>
+    <div class="footer-note">DOB 08.10.2006</div>
+    <div class="footer-note">github.com/parth-cypher</div>
+  </footer>
+
+</div>
+</body>
+</html>
